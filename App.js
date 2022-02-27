@@ -1,10 +1,10 @@
 import * as React from "react";
 import { StyleSheet, Text, View, Pressable, Dimensions } from "react-native";
-import RigidBodies from './rigid-bodies'
+import Game from './Game'
 
 export default function App() {
 	return (
-		<RigidBodies />
+		<Game />
 	)
 }
 
