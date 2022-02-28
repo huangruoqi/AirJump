@@ -19,11 +19,12 @@ class Player {
 }
 
 class Platform {
-	constructor(x, y) {
+	constructor(x, y, up) {
 		this.p = {x: x, y: y}
 		this.v = {x: -200, y: 0}
 		this.a = {x: 0, y: 0}
 		this.size = {width: Math.trunc(height / 2.5), height: Math.trunc(height / 10)}
+		this.upVelocity = up
 	}
 }
 
@@ -39,7 +40,7 @@ const RigidBodies = (props) => {
   }, []);
 
 	const player = new Player(0, 100) 
-	const floor = new Platform(0, -100)
+	const floor = new Platform(0, -100, 550)
 
 	const Acc = function(state) {
 		const player = state['player'].body

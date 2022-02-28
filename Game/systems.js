@@ -42,11 +42,12 @@ const Update = (state, { touches, time, screen}) => {
 
 
 class Platform {
-	constructor(x, y) {
+	constructor(x, y, up) {
 		this.p = {x: x, y: y}
 		this.v = {x: -200, y: 0}
 		this.a = {x: 0, y: 0}
 		this.size = {width: Math.trunc(height / 2.5), height: Math.trunc(height / 10)}
+		this.upVelocity = up
 	}
 }
 
@@ -60,7 +61,7 @@ const Touch = (state, { touches, time, screen}) => {
 	return state;
 }
 
-const Collide = (state, { time, screen }) => {
+const Collide = (state) => {
 	function checkCollision(p, q) {
 		if (!p.canJump) return false
 		const xdis = Math.abs(p.p.x - q.p.x) - (p.size.width + q.size.width) / 2
@@ -77,7 +78,7 @@ const Collide = (state, { time, screen }) => {
 			player.a.y = 0
 			player.p.y = (state[key].body.p.y + player.p.y + player.size.height) / 2 
 			setTimeout(() => {
-				player.v.y = 550
+				player.v.y = state[key].body.upVelocity
 				player.a.y = player.gravity
 			}, 150);
 		}
