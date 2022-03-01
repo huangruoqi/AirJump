@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, Text, StatusBar, Dimensions } from "react-native";
 import { GameEngine } from "react-native-game-engine";
 import { Update, Level, Touch, Collide } from "./systems";
-import { Box } from "./renderers";
+import { Box, Nut } from "./renderers";
 import { Accelerometer } from 'expo-sensors';
 
 const { width, height } = Dimensions.get("screen");
@@ -21,9 +21,11 @@ class Player {
 	platformJump(upVelocity) {
 		this.v.y = 0
 		this.a.y = 0
+		this.canJump = false
 		setTimeout(() => {
 			this.v.y = upVelocity
 			this.a.y = this.gravity
+			this.canJump = true
 		}, 150);
 	}
 
@@ -60,7 +62,7 @@ const RigidBodies = (props) => {
 			systems={[Update, Level, Touch, Collide, Acc]}
 			entities={{
 				engine: {},
-				player: { body: player, color: 'dodgerblue', renderer: Box, totalTime: 0 },
+				player: { body: player, color: 'dodgerblue', renderer: Nut, totalTime: 0 },
 			}}
 		>
 			<StatusBar hidden={true} />

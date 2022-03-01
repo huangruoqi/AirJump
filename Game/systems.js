@@ -1,5 +1,5 @@
 import { Dimensions } from "react-native";
-import { Box } from "./renderers";
+import { Box, Regular } from "./renderers";
 import levels from "./levels";
 
 let floorID = 1;
@@ -20,7 +20,23 @@ class Platform {
       height: Math.trunc(height / 10),
     };
     this.upVelocity = name != "jumppad" ? 550 : 700;
+		this.ypos = this.p.y;
+		this.jy = 0;
+		this.jt = 0;
+		this.isJiggling = false
   }
+	
+	jiggle(dt) {
+		if (!this.isJiggling) return
+		this.jt += dt / 100
+		const jy = (20*-Math.sin(this.jt)) / Math.pow(this.jt, this.jt/6)
+		this.p.y = this.ypos + jy
+		if (this.jt > 12) {
+			this.jt = 0
+			this.isJiggling = false
+			this.p.y = this.ypos
+		}
+	}
 }
 
 const Update = (state, { touches, time, screen }) => {
@@ -44,6 +60,7 @@ const Update = (state, { touches, time, screen }) => {
       b.v.y += b.a.y * dt;
       b.p.x += b.v.x * dt;
       b.p.y += b.v.y * dt;
+			b.jiggle(time.delta)
       if (b.p.x < -width / 2 - 200) {
         delete state[key];
       }
@@ -67,7 +84,7 @@ const Level = (state, { touches, time, screen }) => {
       ),
       floorID: floorID,
       color: obj.name == "jumppad" ? "black" : "pink",
-      renderer: Box,
+      renderer: Regular,
     };
   };
   state["player"].totalTime += time.delta;
@@ -83,7 +100,7 @@ const Level = (state, { touches, time, screen }) => {
 					-100
 				),
 				floorID: floorID,
-				renderer: Box,
+				renderer: Regular,
 			}
 		}
   }
@@ -105,16 +122,16 @@ const Collide = (state) => {
     const xdis = Math.abs(p.p.x - q.p.x) - (p.size.width + q.size.width) / 2;
     if (xdis > 0) return false;
     const ydis = p.p.y - q.p.y - (p.size.height + q.size.height) / 2;
-    return ydis > -15 && ydis < 0;
+    return ydis > -25 && ydis < -10;
   }
   const player = state["player"].body;
   Object.keys(state)
     .filter((key) => state[key].floorID)
     .forEach((key) => {
       if (checkCollision(player, state[key].body)) {
-        player.p.y =
-          (state[key].body.p.y + player.p.y + player.size.height) / 2;
+        // player.p.y = (state[key].body.p.y + player.p.y + player.size.height) / 2;
         player.platformJump(state[key].body.upVelocity);
+				state[key].body.isJiggling = true
       }
     });
 
