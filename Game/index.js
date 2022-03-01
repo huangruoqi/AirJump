@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, Text, StatusBar, Dimensions } from "react-native";
 import { GameEngine } from "react-native-game-engine";
-import { Update, Touch, Collide } from "./systems";
+import { Update, Level, Touch, Collide } from "./systems";
 import { Box } from "./renderers";
 import { Accelerometer } from 'expo-sensors';
 
@@ -57,7 +57,7 @@ const RigidBodies = (props) => {
 
 	return (
 		<GameEngine
-			systems={[Update, Touch, Collide, Acc]}
+			systems={[Update, Level, Touch, Collide, Acc]}
 			entities={{
 				engine: {},
 				player: { body: player, color: 'dodgerblue', renderer: Box, totalTime: 0 },
