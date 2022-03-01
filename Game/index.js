@@ -11,7 +11,7 @@ class Player {
 	constructor(x, y) {
 		this.p = { x: x, y: y }
 		this.v = { x: 0, y: 0 }
-		this.gravity = -1000
+		this.gravity = -1400
 		this.a = { x: 0, y: this.gravity }
 		this.size = { width: Math.trunc(height / 8), height: Math.trunc(height / 8) }
 		this.canJump = true
@@ -26,11 +26,11 @@ class Player {
 			this.v.y = upVelocity
 			this.a.y = this.gravity
 			this.canJump = true
-		}, 150);
+		}, 100);
 	}
 
 	powerJump() {
-		if (this.a.y != 0) this.v.y = 450
+		if (this.a.y != 0) this.v.y = 650
 		this.power--;
 		console.log('power: ' + this.power)
 	}
