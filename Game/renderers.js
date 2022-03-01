@@ -1,11 +1,10 @@
 import React from "react";
-// import Animated from "react-native-reanimated";
-import {Dimensions, View} from "react-native"
+import { Dimensions } from "react-native"
 import Animated from "react-native-reanimated";
 
-const Box = ({body, color}) => {
-	const {width, height} = Dimensions.get('screen')
-	const angle = 0
+const Box = ({ body, color }) => {
+  const { width, height } = Dimensions.get('screen')
+  const angle = 0
 
   return (
     <Animated.View
