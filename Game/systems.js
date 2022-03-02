@@ -19,24 +19,26 @@ class Platform {
       width: Math.trunc(height / 2.5),
       height: Math.trunc(height / 10),
     };
-    this.upVelocity = name != "jumppad" ? 750 : 900;
-		this.ypos = this.p.y;
-		this.jy = 0;
-		this.jt = 0;
-		this.isJiggling = false
+    this.upVelocity = name != "jumppad" ? 700 : 850;
+    this.ypos = this.p.y;
+    this.jy = 0;
+    this.jt = 0;
+    this.isJiggling = false;
   }
-	
-	jiggle(dt) {
-		if (!this.isJiggling) return
-		this.jt += dt / 100
-		const jy = (20*-Math.sin(this.jt*1.2)) / Math.pow(this.jt, this.jt / 10 * 0.5 + 0.5)
-		this.p.y = this.ypos + jy
-		if (this.jt > 10) {
-			this.jt = 0
-			this.isJiggling = false
-			this.p.y = this.ypos
-		}
-	}
+
+  jiggle(dt) {
+    if (!this.isJiggling) return;
+    this.jt += dt / 100;
+    const jy =
+      (20 * -Math.sin(this.jt * 1.2)) /
+      Math.pow(this.jt, (this.jt / 10) * 0.5 + 0.5);
+    this.p.y = this.ypos + jy;
+    if (this.jt > 10) {
+      this.jt = 0;
+      this.isJiggling = false;
+      this.p.y = this.ypos;
+    }
+  }
 }
 
 const Update = (state, { touches, time, screen }) => {
@@ -60,7 +62,7 @@ const Update = (state, { touches, time, screen }) => {
       b.v.y += b.a.y * dt;
       b.p.x += b.v.x * dt;
       b.p.y += b.v.y * dt;
-			b.jiggle(time.delta)
+      b.jiggle(time.delta);
       if (b.p.x < -width / 2 - 200) {
         delete state[key];
       }
@@ -73,15 +75,11 @@ const Level = (state, { touches, time, screen }) => {
     if (currentLevel >= totalLevel) return;
     const obj = levels[currentLevel][currentCount++];
     if (currentCount >= totalCount) {
-			currentLevel++;
-			totalCount = levels[currentLevel] ? levels[currentLevel].length : 0
-		}
+      currentLevel++;
+      totalCount = levels[currentLevel] ? levels[currentLevel].length : 0;
+    }
     return {
-      body: new Platform(
-        obj.name,
-        200 + width / 2,
-        obj.pos
-      ),
+      body: new Platform(obj.name, 200 + width / 2, obj.pos),
       floorID: floorID,
       color: obj.name == "jumppad" ? "black" : "pink",
       renderer: obj.name == "jumppad" ? Jumppad : Regular,
@@ -92,20 +90,16 @@ const Level = (state, { touches, time, screen }) => {
     state["player"].totalTime = 0;
     const p = nextPlatorm();
     if (p) state[floorID++] = p;
-		else {
-			const a = Math.random() < 0.5
-			state[floorID++] = {
-				body: new Platform(
-					a ? 'regular' : 'jumppad',
-					200 + width / 2,
-					-100
-				),
-				floorID: floorID,
-				renderer: a ? Regular : Jumppad,
-			}
-		}
+    else {
+      const a = Math.random() < 0.5;
+      state[floorID++] = {
+        body: new Platform(a ? "regular" : "jumppad", 200 + width / 2, -100),
+        floorID: floorID,
+        renderer: a ? Regular : Jumppad,
+      };
+    }
   }
-	return state
+  return state;
 };
 
 const Touch = (state, { touches, time, screen }) => {
@@ -132,7 +126,8 @@ const Collide = (state) => {
       if (checkCollision(player, state[key].body)) {
         // player.p.y = state[key].body.p.y + state[key].body.size.height / 2 + player.size.height /2 - 25
         player.platformJump(state[key].body.upVelocity);
-				state[key].body.isJiggling = true
+        state[key].body.isJiggling = true;
+				state.player.r.current()
       }
     });
 

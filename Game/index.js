@@ -40,10 +40,11 @@ class Player {
 
 
 const RigidBodies = (props) => {
-	const ref = React.useRef({ x: 0, y: 0, z: 0 })
+	const acc = React.useRef({ x: 0, y: 0, z: 0 })
+	const ref = React.useRef(null)
 	React.useEffect(() => {
 		const id = Accelerometer.addListener(accelerometerData => {
-			ref.current = accelerometerData
+			acc.current = accelerometerData
 		})
 		Accelerometer.setUpdateInterval(20)
 		return () => id.remove();
@@ -53,7 +54,7 @@ const RigidBodies = (props) => {
 
 	const Acc = function (state) {
 		const player = state['player'].body
-		player.v.x = ref.current.y * -800
+		player.v.x = acc.current.y * -800
 		return state
 	}
 
@@ -61,8 +62,7 @@ const RigidBodies = (props) => {
 		<GameEngine
 			systems={[Update, Level, Touch, Collide, Acc]}
 			entities={{
-				engine: {},
-				player: { body: player, color: 'dodgerblue', renderer: Nut, totalTime: 0 },
+				player: { body: player,r: ref,color: 'dodgerblue', renderer: Nut, totalTime: 0 },
 			}}
 		>
 			<StatusBar hidden={true} />
