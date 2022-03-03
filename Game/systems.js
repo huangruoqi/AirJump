@@ -108,7 +108,7 @@ const Level = (state, { touches, time, screen }) => {
     };
   };
   state["player"].totalTime += time.delta;
-  if (state["player"].totalTime >= 1200) {
+  if (state["player"].totalTime >= 800) {
     state["player"].totalTime = 0;
     const p = nextPlatorm();
     if (p) state['floor'+floorID++] = p;
