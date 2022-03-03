@@ -139,4 +139,37 @@ const Fly = ({ body, color }) => {
   );
 };
 
-export { Box, Nut, Regular, Jumppad, Fly };
+const BG = ({body}) => {
+  const { width, height } = Dimensions.get("screen");
+  const x = body.p.x + width / 2 - body.size.width / 2;
+  const y = -body.p.y + height / 2 - body.size.height / 2;
+
+  return (
+    <View>
+      <SpriteSheet
+        source={require("../assets/bg.png")}
+        columns={1}
+        rows={1}
+        viewStyle={{
+          position: "absolute",
+          left: x,
+          top: y,
+        }}
+        width={body.size.width}
+      />
+      <SpriteSheet
+        source={require("../assets/bg.png")}
+        columns={1}
+        rows={1}
+        viewStyle={{
+          position: "absolute",
+          left: x+body.size.width,
+          top: y,
+        }}
+        width={body.size.width}
+      />
+    </View>
+  );
+};
+
+export { Box, Nut, Regular, Jumppad, Fly, BG };

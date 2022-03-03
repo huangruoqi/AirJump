@@ -2,8 +2,9 @@ import * as React from "react";
 import { View, Text, StatusBar, Dimensions } from "react-native";
 import { GameEngine } from "react-native-game-engine";
 import { Update, Level, Touch, Collide } from "./systems";
-import { Box, Nut } from "./renderers";
+import { Box, Nut, BG } from "./renderers";
 import { Accelerometer } from 'expo-sensors';
+import { SpriteSheet} from 'rn-sprite-sheet'
 
 const { width, height } = Dimensions.get("screen");
 
@@ -58,11 +59,17 @@ const RigidBodies = (props) => {
 		player.v.x = acc.current.y * -800
 		return state
 	}
+	const bg = {
+		size: {width: 1920, height: 540},
+		p: {x: 0, y: 0},
+		v: {x: -20, y: 0}
+	}
 
 	return (
 		<GameEngine
 			systems={[Update, Level, Touch, Collide, Acc]}
 			entities={{
+				bg: {body: bg, renderer: BG},
 				player: { body: player,r: ref,color: 'dodgerblue', renderer: player.renderer, totalTime: 0 },
 			}}
 		>
@@ -70,5 +77,7 @@ const RigidBodies = (props) => {
 		</GameEngine>
 	);
 };
+
+
 
 export default RigidBodies;

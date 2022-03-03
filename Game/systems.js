@@ -86,6 +86,9 @@ const Update = (state, { touches, time, screen }) => {
         delete state[key];
       }
     });
+	
+	state.bg.body.p.x += state.bg.body.v.x * dt
+	if (state.bg.body.p.x < -1920) state.bg.body.p.x += 1920
   return state;
 };
 
@@ -108,7 +111,7 @@ const Level = (state, { touches, time, screen }) => {
   if (state["player"].totalTime >= 1200) {
     state["player"].totalTime = 0;
     const p = nextPlatorm();
-    if (p) state[floorID++] = p;
+    if (p) state['floor'+floorID++] = p;
     else {
       const a = Math.random() < 0.5;
       const floor = new Platform(
@@ -116,7 +119,7 @@ const Level = (state, { touches, time, screen }) => {
         200 + width / 2,
         -100
       );
-      state[floorID++] = {
+      state['floor'+floorID++] = {
         body: floor,
         floorID: floorID,
         renderer: floor.renderer,
