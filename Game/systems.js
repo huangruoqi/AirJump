@@ -1,5 +1,5 @@
 import { Dimensions } from "react-native";
-import { Box, Regular, Jumppad } from "./renderers";
+import { Box, Regular, Jumppad, Fly } from "./renderers";
 import levels from "./levels";
 
 let floorID = 1;
@@ -24,6 +24,7 @@ class Platform {
     this.jy = 0;
     this.jt = 0;
     this.isJiggling = false;
+    this.renderer = name != "jumppad" ? Regular : Jumppad;
   }
 
   jiggle(dt) {
@@ -38,6 +39,24 @@ class Platform {
       this.isJiggling = false;
       this.p.y = this.ypos;
     }
+  }
+}
+
+class Monster {
+  constructor(name, x, y) {
+    this.p = { x: x, y: y };
+    this.v = { x: -200, y: 0 };
+    this.a = { x: 0, y: 0 };
+    this.size = {
+      width: Math.trunc(height / 2.5),
+      height: Math.trunc(height / 10),
+    };
+    this.upVelocity = 650;
+    this.ypos = this.p.y;
+    this.jy = 0;
+    this.jt = 0;
+    this.isJiggling = false;
+    this.renderer = Fly;
   }
 }
 
@@ -78,11 +97,11 @@ const Level = (state, { touches, time, screen }) => {
       currentLevel++;
       totalCount = levels[currentLevel] ? levels[currentLevel].length : 0;
     }
+    const floor = new Platform(obj.name, 200 + width / 2, obj.pos);
     return {
       body: new Platform(obj.name, 200 + width / 2, obj.pos),
       floorID: floorID,
-      color: obj.name == "jumppad" ? "black" : "pink",
-      renderer: obj.name == "jumppad" ? Jumppad : Regular,
+      renderer: floor.renderer,
     };
   };
   state["player"].totalTime += time.delta;
@@ -92,10 +111,15 @@ const Level = (state, { touches, time, screen }) => {
     if (p) state[floorID++] = p;
     else {
       const a = Math.random() < 0.5;
+      const floor = new Platform(
+        a ? "regular" : "jumppad",
+        200 + width / 2,
+        -100
+      );
       state[floorID++] = {
-        body: new Platform(a ? "regular" : "jumppad", 200 + width / 2, -100),
+        body: floor,
         floorID: floorID,
-        renderer: a ? Regular : Jumppad,
+        renderer: floor.renderer,
       };
     }
   }
@@ -127,7 +151,7 @@ const Collide = (state) => {
         // player.p.y = state[key].body.p.y + state[key].body.size.height / 2 + player.size.height /2 - 25
         player.platformJump(state[key].body.upVelocity);
         state[key].body.isJiggling = true;
-				state.player.r.current()
+        state.player.r.current();
       }
     });
 

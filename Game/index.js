@@ -16,6 +16,7 @@ class Player {
 		this.size = { width: Math.trunc(height / 8), height: Math.trunc(height / 8) }
 		this.canJump = true
 		this.power = 5;
+		this.renderer = Nut
 	}
 
 	platformJump(upVelocity) {
@@ -62,7 +63,7 @@ const RigidBodies = (props) => {
 		<GameEngine
 			systems={[Update, Level, Touch, Collide, Acc]}
 			entities={{
-				player: { body: player,r: ref,color: 'dodgerblue', renderer: Nut, totalTime: 0 },
+				player: { body: player,r: ref,color: 'dodgerblue', renderer: player.renderer, totalTime: 0 },
 			}}
 		>
 			<StatusBar hidden={true} />
